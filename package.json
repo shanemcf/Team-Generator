@@ -6,6 +6,10 @@
   "scripts": {
     "test": "npm test"
   },
+  "dependencies": {
+    "inquirer": "^7.3.3",
+    "jest": "^26.6.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shanemcf/Team-Generator.git"
