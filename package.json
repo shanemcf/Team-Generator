@@ -1,0 +1,19 @@
+{
+  "name": "team-generator",
+  "version": "1.0.0",
+  "description": "generates webpages to display team info",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shanemcf/Team-Generator.git"
+  },
+  "author": "Shane McFadden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shanemcf/Team-Generator/issues"
+  },
+  "homepage": "https://github.com/shanemcf/Team-Generator#readme"
+}
