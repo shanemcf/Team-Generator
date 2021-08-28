@@ -1,12 +1,11 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-const util = require("util");
+// const util = require("util");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 
-const generatedHtmlFilePath = "./TeamFile.html"
-
+const teamFileHTML = require("./teamFileHTML.js");
 const createTeam = []; 
 
 // manager questions and prompts
@@ -132,7 +131,7 @@ const writeFile = data => {
 addManager()
   .then(addEmployee)
   .then(createTeam => {
-    return generatedHtmlFilePath(createTeam);
+    return teamFileHTML(createTeam);
   })
   .then(pageHTML => {
     return writeFile(pageHTML);
