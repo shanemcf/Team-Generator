@@ -7,41 +7,133 @@ const Intern = require("./lib/Intern");
 
 const generatedHtmlFilePath = "./TeamFile.html"
 
-const questions = [
+const createTeam = []; 
 
-    {
-        type: 'input',
-        name: 'managerName',
-        message: 'Enter team manager name',
-    },
-   
-    {
-        type: 'list',
-        name: 'license',
-        message: 'what kind of license is your application covered under?',
-        choices: ['MIT', 'Apache', 'GPL']
+// manager questions and prompts
+const addManager = () => {
+    return inquirer.prompt ([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'Who is the manager of this team?', 
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "Please enter the manager's ID.",
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: "Please enter the manager's email.",
+        },
+        {
+            type: 'input',
+            name: 'officeNumber',
+            message: "Please enter the manager's office number",
+        }
+    ])
+    .then(createManager => {
+        const  { name, id, email, officeNumber } = createManager; 
+        const manager = new Manager (name, id, email, officeNumber);
 
-    },
-];
+        createTeam.push(manager); 
+        console.log(manager); 
+    })
+};
 
-// function to write file
-function writeToFile(fileName, data) {
-    fs.writeFile(fileName, data, (err) => {
-        if (err) throw err;
-        console.log('The file has been saved!');
-    });
-}
+const addEmployee = () => {
+  
 
-// function to initialize program
-function init() {
-    inquirer
-        .prompt(questions)
-        .then(answers => {
-            console.info('Answers:', answers);
-            const dataToReadme = generateMarkdown(answers);
-            writeToFile('generatedHtmlFilePath', dataToReadme);
-        });
-}
+    return inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'role',
+            message: "Please choose the role of your employee",
+            choices: ['Engineer', 'Intern']
+        },
+        {
+            type: 'input',
+            name: 'name',
+            message: "What is the name of your employee?", 
+    
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "Please enter that employee's ID",
+           
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: "Please enter the employee's email.",
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: "Please enter the employee's github username.",
+            when: (input) => input.role === "Engineer",
+        },
+        {
+            type: 'input',
+            name: 'school',
+            message: "Please enter this intern's school",
+            when: (input) => input.role === "Intern",
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddEmployee',
+            message: 'Would you like to add more team members?',
+            default: false
+        }
+    ])
+    .then(employeeData => {
 
-// function call to initialize program
-init();
+        let { name, id, email, role, github, school, confirmAddEmployee } = employeeData; 
+        let employee; 
+
+        if (role === "Engineer") {
+            employee = new Engineer (name, id, email, github);
+
+            console.log(employee);
+
+        } else if (role === "Intern") {
+            employee = new Intern (name, id, email, school);
+
+            console.log(employee);
+        }
+
+        createTeam.push(employee); 
+
+        if (confirmAddEmployee) {
+            return addEmployee(createTeam); 
+        } else {
+            return createTeam;
+        }
+    })
+
+};
+
+
+
+const writeFile = data => {
+    fs.writeFile('./index.html', data, err => {
+        // error handling
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log("Your team has been successfully created")
+        }
+    })
+}; 
+
+addManager()
+  .then(addEmployee)
+  .then(createTeam => {
+    return generatedHtmlFilePath(createTeam);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
